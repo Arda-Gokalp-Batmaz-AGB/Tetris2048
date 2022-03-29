@@ -113,4 +113,5 @@ class GameGrid:
                else:
                   self.game_over = True
       # return the game_over flag
+      #print(self.tile_matrix.__str__())
       return self.game_over

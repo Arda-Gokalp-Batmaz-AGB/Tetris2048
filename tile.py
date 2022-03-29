@@ -1,6 +1,6 @@
 import lib.stddraw as stddraw  # stddraw is used as a basic graphics library
 from lib.color import Color  # used for coloring the tile and the number on it
-
+import random # used for creating tetrominoes with random types/shapes
 # Class used for modeling numbered tiles as in 2048
 class Tile: 
    # Class attributes shared among all Tile objects
@@ -13,9 +13,12 @@ class Tile:
    # Constructor that creates a tile with 2 as the number on it
    def __init__(self):
       # set the number on the tile
-      self.number = 2
+      tetromino_types = [2, 4]
+      color_types = [Color(255, 204, 102),Color(255, 153, 0)]
+      random_index = random.randint(0, len(tetromino_types) - 1)
+      self.number = tetromino_types[random_index]
       # set the colors of the tile
-      self.background_color = Color(151, 178, 199) # background (tile) color
+      self.background_color = color_types[random_index] # background (tile) color
       self.foreground_color = Color(0, 100, 200) # foreground (number) color
       self.box_color = Color(0, 100, 200) # box (boundary) color
 
@@ -34,3 +37,9 @@ class Tile:
       stddraw.setFontFamily(Tile.font_family)
       stddraw.setFontSize(Tile.font_size)
       stddraw.text(position.x, position.y, str(self.number))
+
+   def __str__(self):
+      return str(self.number)
+
+   def __repr__(self):
+      return str(self.number)

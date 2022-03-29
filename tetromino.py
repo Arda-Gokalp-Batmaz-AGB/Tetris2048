@@ -3,7 +3,7 @@ from point import Point  # used for tile positions
 import copy as cp  # the copy module is used for copying tiles and positions
 import random  # module for generating random values/permutations
 import numpy as np  # the fundamental Python module for scientific computing
-
+from copy import copy, deepcopy
 # Class used for modeling tetrominoes with 3 out of 7 different types/shapes 
 # as (I, O and Z)
 class Tetromino:
@@ -36,6 +36,34 @@ class Tetromino:
          occupied_tiles.append((0, 1)) # (column_index, row_index) 
          occupied_tiles.append((1, 1))
          occupied_tiles.append((1, 2))
+         occupied_tiles.append((2, 2))
+      elif type == 'S':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino Z in its initial orientation
+         occupied_tiles.append((1, 1)) # (column_index, row_index)
+         occupied_tiles.append((2, 1))
+         occupied_tiles.append((1, 2))
+         occupied_tiles.append((0, 2))
+      elif type == 'T':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino Z in its initial orientation
+         occupied_tiles.append((0, 1)) # (column_index, row_index)
+         occupied_tiles.append((1, 1))
+         occupied_tiles.append((2, 1))
+         occupied_tiles.append((1, 2))
+      elif type == 'L':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino Z in its initial orientation
+         occupied_tiles.append((0, 1)) # (column_index, row_index)
+         occupied_tiles.append((1, 1))
+         occupied_tiles.append((2, 1))
+         occupied_tiles.append((0, 2))
+      elif type == 'J':
+         n = 3  # n = number of rows = number of columns in the tile matrix
+         # shape of the tetromino Z in its initial orientation
+         occupied_tiles.append((0, 1)) # (column_index, row_index)
+         occupied_tiles.append((1, 1))
+         occupied_tiles.append((2, 1))
          occupied_tiles.append((2, 2))
       # create a matrix of numbered tiles based on the shape of the tetromino
       self.tile_matrix = np.full((n, n), None)
