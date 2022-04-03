@@ -30,7 +30,7 @@ def start():
    # by using the create_tetromino function defined below
    current_tetromino = create_tetromino(grid_h, grid_w)
    #next_tetromino = create_tetromino(grid_h, grid_w)
-   NEXT_TETROMINO_COUNT = 5
+   NEXT_TETROMINO_COUNT = 3
    #next_tetrominos = [create_tetromino(grid_h, grid_w),create_tetromino(grid_h, grid_w),create_tetromino(grid_h, grid_w)]
    next_tetrominos = []
    for i in range(0,NEXT_TETROMINO_COUNT):

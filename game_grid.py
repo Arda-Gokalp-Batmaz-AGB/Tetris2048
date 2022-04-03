@@ -229,11 +229,13 @@ class GameGrid:
          row = row + 1
          col = 0
    def ShowNextTetromino(self):
-      currentheight = self.grid_height - 4
+      currentheight = self.grid_height - 4#2
+      stddraw.setFontSize(40)
+      stddraw.boldText(self.grid_width * 1.1, currentheight, f"Next")
       for i in range(0,len(self.next_tetrominos)):
          copy_next_tetromino = copy.deepcopy(self.next_tetrominos[i])
          copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
-         currentheight = currentheight - 3
+         currentheight = currentheight - 4.5# 4.5
          copy_next_tetromino.bottom_left_cell.y = currentheight
          copy_next_tetromino.draw()
          copy_next_tetromino = None
