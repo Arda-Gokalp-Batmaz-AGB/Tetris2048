@@ -4,6 +4,7 @@ import copy as cp  # the copy module is used for copying tiles and positions
 import random  # module for generating random values/permutations
 import numpy as np  # the fundamental Python module for scientific computing
 from copy import copy, deepcopy
+import time
 # Class used for modeling tetrominoes with 3 out of 7 different types/shapes 
 # as (I, O and Z)
 class Tetromino:
@@ -260,11 +261,11 @@ class Tetromino:
                      newcolumn = newcolumn + pivot_y
                   rotated_tetromino_matrix[newrow][newcolumn] = current_tile
 
-                  coord = self.get_cell_position(newrow, newcolumn)
-                 # print(coord)
-                  if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
-                     #print("Its out of bound so rotation cancelled")
-                     return self.tile_matrix
+                 #  coord = self.get_cell_position(newrow, newcolumn)
+                 # # print(coord)
+                 #  if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
+                 #     #print("Its out of bound so rotation cancelled")
+                 #     return self.tile_matrix
 
       elif(n==4):
          position = None
@@ -291,12 +292,17 @@ class Tetromino:
                   newrow = -1 * (newrow - 3)
                   rotated_tetromino_matrix[newrow][newcolumn] = current_tile
 
-                  coord = self.get_cell_position(newrow, newcolumn)
-                  #print(coord)
-                  if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
-                    # print("Its out of bound so rotation cancelled")
-                     return self.tile_matrix
+                  # coord = self.get_cell_position(newrow, newcolumn)
+                  # #print(coord)
+                  # if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
+                  #   # print("Its out of bound so rotation cancelled")
+                  #    return self.tile_matrix
 
+
+      if (self.CheckRotatedTetromino(rotated_tetromino_matrix,game_grid)==False):
+         return self.tile_matrix
+
+      #return self.tile_matrix
       #print(rotated_tetromino_matrix.__str__())
       return rotated_tetromino_matrix
 
@@ -305,3 +311,16 @@ class Tetromino:
    # if not game_grid.is_inside(coord.y, coord.x):
    #    print("Its out of bound so rotation cancelled")
    #    return self.tile_matrix
+
+   def CheckRotatedTetromino(self,rotated_tetromino_matrix,game_grid):
+      n = len(self.tile_matrix)
+      for col in range(0, n):
+         for row in range(0, n):
+            current_tile = rotated_tetromino_matrix[row][col]
+            if current_tile is not None:
+               coord = self.get_cell_position(row, col)
+               if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
+                  return False
+
+      return True
+

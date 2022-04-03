@@ -146,4 +146,73 @@ class GameGrid:
             rows_will_cleared.append(row)
       return rows_will_cleared
 
+
+
+   def MergeTiles(self):
+      n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
+      row = 0
+      col = 0
+      while row < n_rows:
+         while col < n_cols:
+            current_tile = self.tile_matrix[row][col]
+            if current_tile is not None and row + 1 < n_rows:#row + 1 >= 0:
+               upper_tile = self.tile_matrix[row+1][col]
+               if upper_tile is not None:
+                  if current_tile.number == upper_tile.number:# merge
+                     #current_tile.number = current_tile.number * 2
+                     current_tile.DoubleNumber()
+                     self.tile_matrix[row+1][col] = None
+                     row = 0
+                     col = 0
+                     continue
+            col = col + 1
+         row = row + 1
+         col = 0
+
+   def CheckIsolateds(self):
+      n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
+      row = 0
+      col = 0
+      while row < n_rows:
+         while col < n_cols:
+            current_tile = self.tile_matrix[row][col]
+            if current_tile is not None:
+               if(row==0):
+                  col = col + 1
+                  continue
+               elif(row + 1 < n_rows and self.tile_matrix[row + 1][col] is not None):#upper neighbour
+                  col = col + 1
+                  continue
+               elif(col + 1 < n_cols and self.tile_matrix[row][col+1] is not None): #right neighbour
+                  col = col + 1
+                  continue
+               elif(row -1 >= 0 and self.tile_matrix[row - 1][col] is not None): #bottom neighbour
+                  col = col + 1
+                  continue
+               elif(col - 1 >=0 and self.tile_matrix[row][col-1] is not None): # left neighbour
+                  col = col + 1
+                  continue
+               else: #It is a isolated tile
+                  newrow = row
+                  newrow = newrow -1
+                  next_location = self.tile_matrix[newrow][col]
+                  while next_location == None and newrow - 1 >= 0:
+                     if (newrow == 0):
+                        break
+                     if (newrow + 1 < n_rows and self.tile_matrix[newrow + 1][col] is not None):  # upper neighbour
+                        break
+                     elif (col + 1 < n_cols and self.tile_matrix[newrow][col + 1] is not None):  # right neighbour
+                        break
+                     elif (newrow - 1 >= 0 and self.tile_matrix[newrow - 1][col] is not None):  # bottom neighbour
+                        break
+                     elif (col - 1 >= 0 and self.tile_matrix[newrow][col - 1] is not None):   # left neighbour
+                        break
+                     newrow = newrow - 1
+                  self.tile_matrix[newrow][col] = current_tile
+                  self.tile_matrix[row][col] = None
+                  row = 0
+                  col = 0
+            col = col + 1
+         row = row + 1
+         col = 0
    def ShowNextTetromino(self):

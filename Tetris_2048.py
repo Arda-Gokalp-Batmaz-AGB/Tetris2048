@@ -5,7 +5,7 @@ import os  # the os module is used for file and directory operations
 from game_grid import GameGrid # the class for modeling the game grid
 from tetromino import Tetromino # the class for modeling the tetrominoes
 import random # used for creating tetrominoes with random types/shapes
-
+import lib.stddraw as stddraw
 # MAIN FUNCTION OF THE PROGRAM
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
@@ -38,7 +38,7 @@ def start():
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    #display_game_menu(grid_h, grid_w)
-   
+
    # the main game loop (keyboard interaction for moving the tetromino) 
    while True:
       # check user interactions via the keyboard
@@ -84,9 +84,14 @@ def start():
          next_tetromino = create_tetromino(grid_h, grid_w)#
          print(f"Next: {next_tetromino.type}")
          grid.next_tetromino = next_tetromino
-         grid.ClearHorizontal()
+         # grid.MergeTiles()
+         # grid.CheckIsolateds()
+         # grid.ClearHorizontal()
          print(grid.score)
-      # display the game grid and the current tetromino      
+      # display the game grid and the current tetromino
+      grid.MergeTiles()
+      grid.CheckIsolateds()
+      grid.ClearHorizontal()
       grid.display()
 
    # print a message on the console when the game is over
