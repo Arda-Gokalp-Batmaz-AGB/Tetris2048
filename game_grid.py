@@ -2,7 +2,8 @@ import lib.stddraw as stddraw  # stddraw is used as a basic graphics library
 from lib.color import Color # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
-
+import os
+from lib.picture import Picture
 # Class used for modelling the game grid
 class GameGrid:
 	# Constructor for creating the game grid based on the given arguments
@@ -14,6 +15,7 @@ class GameGrid:
       self.tile_matrix = np.full((grid_h, grid_w), None)
       # create the tetromino that is currently being moved on the game grid
       self.current_tetromino = None
+      self.next_tetromino = None#
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
@@ -25,6 +27,7 @@ class GameGrid:
       self.line_thickness = 0.002
       self.box_thickness = 10 * self.line_thickness
 
+      self.score = 0
    # Method used for displaying the game grid
    def display(self):
       # clear the background to empty_cell_color
@@ -35,9 +38,10 @@ class GameGrid:
       # game grid is updated)
       if self.current_tetromino is not None:
          self.current_tetromino.draw()
-      # draw a box around the game grid 
+      # draw a box around the game grid
       self.draw_boundaries()
       # show the resulting drawing with a pause duration = 250 ms
+      self.ShowNextTetromino()
       stddraw.show(250)
          
    # Method for drawing the cells and the lines of the game grid
@@ -115,3 +119,31 @@ class GameGrid:
       # return the game_over flag
       #print(self.tile_matrix.__str__())
       return self.game_over
+
+   def ClearHorizontal(self):
+      #will_cleared_horizontal = self.CheckHorizontal()
+      will_cleared_horizontal_rows = self.CheckHorizontal()
+      #print(will_cleared_horizontal)
+      n_cols = len(self.tile_matrix[0])
+      if(len(will_cleared_horizontal_rows) != 0):
+         for row in will_cleared_horizontal_rows:
+            for col in range(n_cols):
+               self.score = self.score + self.tile_matrix[row][col].number
+               self.tile_matrix[row][col]=None
+
+   def CheckHorizontal(self):
+      n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
+      rows_will_cleared = []
+      for row in range(n_rows):
+         horizontal_count = 0
+         for col in range(n_cols):
+            if (self.tile_matrix[row][col] != None):
+               horizontal_count = horizontal_count + 1
+            else:
+               break
+
+         if(horizontal_count == n_cols):
+            rows_will_cleared.append(row)
+      return rows_will_cleared
+
+   def ShowNextTetromino(self):
