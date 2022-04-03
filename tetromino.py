@@ -261,8 +261,47 @@ class Tetromino:
                   rotated_tetromino_matrix[newrow][newcolumn] = current_tile
 
                   coord = self.get_cell_position(newrow, newcolumn)
-                  print(coord)
+                 # print(coord)
                   if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
-                     print("Its out of bound so rotation cancelled")
+                     #print("Its out of bound so rotation cancelled")
                      return self.tile_matrix
 
+      elif(n==4):
+         position = None
+         if(self.tile_matrix[0][1] !=None or self.tile_matrix[0][2] !=None):
+            position="vertical"
+         else:
+            position="horizontal"
+         for col in range(0,n):
+            for row in range(0,n):
+               current_tile = self.tile_matrix[row][col]
+               if current_tile is not None:
+                  newcolumn = col
+                  newrow = row
+                  # Swap row-column (m,n) -> (n,m)
+                  temp = newrow
+                  newrow = newcolumn
+                  newcolumn = temp
+                  # Swap row-column
+                  if(position == "horizontal"):
+                     if(newcolumn + 1 == 3):
+                        newcolumn = 1
+                     else:
+                        newcolumn = newcolumn + 1
+                  newrow = -1 * (newrow - 3)
+                  rotated_tetromino_matrix[newrow][newcolumn] = current_tile
+
+                  coord = self.get_cell_position(newrow, newcolumn)
+                  #print(coord)
+                  if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
+                    # print("Its out of bound so rotation cancelled")
+                     return self.tile_matrix
+
+      #print(rotated_tetromino_matrix.__str__())
+      return rotated_tetromino_matrix
+
+   # coord = self.get_cell_position(newrow, newcolumn)
+   # print(coord)
+   # if not game_grid.is_inside(coord.y, coord.x):
+   #    print("Its out of bound so rotation cancelled")
+   #    return self.tile_matrix

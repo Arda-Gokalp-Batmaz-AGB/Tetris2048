@@ -11,14 +11,15 @@ import random # used for creating tetrominoes with random types/shapes
 # Main function where this program starts execution
 def start():
    # set the dimensions of the game grid
-   grid_h, grid_w = 20, 12
+   grid_h, grid_w = 20, 14#20, 12
    # set the size of the drawing canvas
    canvas_h, canvas_w = 40 * grid_h, 40 * grid_w#40
    stddraw.setCanvasSize(canvas_w, canvas_h) 
    # set the scale of the coordinate system
    stddraw.setXscale(-0.5, grid_w - 0.5)
    stddraw.setYscale(-0.5, grid_h - 0.5)
-
+   display_game_menu(grid_h, grid_w)
+   grid_w = 10
    # set the dimension values stored and used in the Tetromino class
    Tetromino.grid_height = grid_h
    Tetromino.grid_width = grid_w
@@ -28,11 +29,15 @@ def start():
    # create the first tetromino to enter the game grid 
    # by using the create_tetromino function defined below
    current_tetromino = create_tetromino(grid_h, grid_w)
+   next_tetromino = create_tetromino(grid_h, grid_w)
+   print(f"Next: {next_tetromino.type}")
    grid.current_tetromino = current_tetromino
+   grid.next_tetromino = next_tetromino#
+   #grid.ShowNextTetromino()
 
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
-   display_game_menu(grid_h, grid_w)
+   #display_game_menu(grid_h, grid_w)
    
    # the main game loop (keyboard interaction for moving the tetromino) 
    while True:
@@ -74,9 +79,13 @@ def start():
             break
          # create the next tetromino to enter the game grid
          # by using the create_tetromino function defined below
-         current_tetromino = create_tetromino(grid_h, grid_w)
+         current_tetromino = next_tetromino #         current_tetromino = create_tetromino(grid_h, grid_w)
          grid.current_tetromino = current_tetromino
-
+         next_tetromino = create_tetromino(grid_h, grid_w)#
+         print(f"Next: {next_tetromino.type}")
+         grid.next_tetromino = next_tetromino
+         grid.ClearHorizontal()
+         print(grid.score)
       # display the game grid and the current tetromino      
       grid.display()
 
