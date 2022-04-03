@@ -13,7 +13,7 @@ def start():
    # set the dimensions of the game grid
    grid_h, grid_w = 20, 12
    # set the size of the drawing canvas
-   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w
+   canvas_h, canvas_w = 40 * grid_h, 40 * grid_w#40
    stddraw.setCanvasSize(canvas_w, canvas_h) 
    # set the scale of the coordinate system
    stddraw.setXscale(-0.5, grid_w - 0.5)
@@ -50,6 +50,10 @@ def start():
          # if the down arrow key has been pressed
          elif key_typed == "down":
             # move the active tetromino down by one 
+            # (soft drop: causes the tetromino to fall down faster)
+            current_tetromino.move(key_typed, grid)
+         elif key_typed == "up":
+            # move the active tetromino down by one
             # (soft drop: causes the tetromino to fall down faster)
             current_tetromino.move(key_typed, grid)
          # clear the queue of the pressed keys for a smoother interaction

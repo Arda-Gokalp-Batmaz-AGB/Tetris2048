@@ -88,6 +88,7 @@ class Tetromino:
       position.x = self.bottom_left_cell.x + col
       # vertical position of the cell
       position.y = self.bottom_left_cell.y + (n - 1) - row
+      #print(position.y)
       return position
 
    # Method that returns a copy of tile_matrix omitting empty rows and columns
@@ -149,8 +150,10 @@ class Tetromino:
          self.bottom_left_cell.x -= 1
       elif direction == "right":
          self.bottom_left_cell.x += 1
-      else:  # direction == "down"
+      elif direction == "down":
          self.bottom_left_cell.y -= 1
+      else:
+        self.tile_matrix= self.rotateTetromino(game_grid)
       return True  # successful move in the given direction
    
    # Method to check if the tetromino can be moved in the given direction or not
@@ -192,20 +195,74 @@ class Tetromino:
                      return False
                   break  # end the inner for loop
       # direction = down --> check the bottommost tile of each column
-      else:
+      elif dir=="down":
          for col in range(n):
             for row in range(n - 1, -1, -1):
                if self.tile_matrix[row][col] is not None:
                   bottommost = self.get_cell_position(row, col)
-                  # skip each column whose bottommost tile is out of the grid 
+                  # skip each column whose bottommost tile is out of the grid
                   # (possible for newly entered tetrominoes to the game grid)
                   if bottommost.y > self.grid_height:
                      break
                   # tetromino cannot go down if any bottommost tile is at y = 0
                   if bottommost.y == 0:
-                     return False 
+                     return False
                   # or the grid cell below any bottommost tile is occupied
                   if game_grid.is_occupied(bottommost.y - 1, bottommost.x):
                      return False
                   break  # end the inner for loop
+
+
+      elif dir=="up":
+         pass
+         # rotated_tetromino_matrix = deepcopy(self.tile_matrix)
+         # pivot_x = 1
+         # pivot_y = 1
+         # for col in range(n):
+         #    for row in range(n - 1, -1, -1):
+         #       current_tile = self.tile_matrix[row][col]
+         #       if current_tile is not None:
+         #          newcolumn = col - pivot_y
+         #          newrow = row - pivot_x
+         #
+         #          #Swap row-column
+         #          temp = newrow
+         #          newrow = newcolumn
+         #          newcolumn = -1 * temp
+         #          # Swap row-column
+         #          newrow = newrow + pivot_x
+         #          newcolumn = newcolumn + pivot_y
+         #          rotated_tetromino_matrix[row][col]=None
+         #          rotated_tetromino_matrix[newrow][newcolumn]=current_tile
+
       return True  # tetromino can be moved in the given direction
+
+
+   def rotateTetromino(self,game_grid):
+      n = len(self.tile_matrix)
+      rotated_tetromino_matrix = np.full((n, n), None)
+      pivot_x = 1
+      pivot_y = 1
+      if(n!=4):#n==3
+         for col in range(0,n):
+            for row in range(0,n):
+               current_tile = self.tile_matrix[row][col]
+               if current_tile is not None:
+                  newcolumn = col - pivot_y
+                  newrow = row - pivot_x
+                  # Swap row-column (m,n) -> (-n,m)
+                  temp = newrow
+                  newrow = newcolumn
+                  newcolumn = -1 * temp
+                  # Swap row-column
+                  newrow = newrow + pivot_x
+                  if(n==3):
+                     newcolumn = newcolumn + pivot_y
+                  rotated_tetromino_matrix[newrow][newcolumn] = current_tile
+
+                  coord = self.get_cell_position(newrow, newcolumn)
+                  print(coord)
+                  if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None :
+                     print("Its out of bound so rotation cancelled")
+                     return self.tile_matrix
+
