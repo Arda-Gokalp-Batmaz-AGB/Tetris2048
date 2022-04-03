@@ -38,6 +38,12 @@ class Tile:
       stddraw.setFontSize(Tile.font_size)
       stddraw.text(position.x, position.y, str(self.number))
 
+   def DoubleNumber(self):
+      self.number = self.number * 2
+      number_list = [2,4,8,16,32,64,128,256,512,1024,2048,4096,8192]
+      index=number_list.index(self.number)
+      color_list = [Color(255, 204, 102),Color(255, 153, 0),Color(255, 128, 0),Color(230, 115, 0),Color(204, 102, 0),Color(102, 51, 0),Color(230, 230, 0),Color(255, 102, 0),Color(255, 140, 102),Color(255, 83, 26),Color(204, 51, 0),Color(102, 26, 0),Color(26, 6, 0)]
+      self.background_color = color_list[index]
    def __str__(self):
       return str(self.number)
 

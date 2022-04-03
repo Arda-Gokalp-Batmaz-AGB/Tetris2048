@@ -42,6 +42,7 @@ class GameGrid:
       self.draw_boundaries()
       # show the resulting drawing with a pause duration = 250 ms
       self.ShowNextTetromino()
+      self.ShowScore()
       stddraw.show(250)
          
    # Method for drawing the cells and the lines of the game grid
@@ -68,9 +69,9 @@ class GameGrid:
    def draw_boundaries(self):
       # draw a bounding box around the game grid as a rectangle
       stddraw.setPenColor(self.boundary_color)  # using boundary_color
-      # set the pen radius as box_thickness (half of this thickness is visible 
+      # set the pen radius as box_thickness (half of this thickness is visible
       # for the bounding box as its lines lie on the boundaries of the canvas)
-      stddraw.setPenRadius(self.box_thickness)
+      stddraw.setPenRadius(self.box_thickness/10)
       # the coordinates of the bottom left corner of the game grid
       pos_x, pos_y = -0.5, -0.5
       stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
@@ -131,6 +132,10 @@ class GameGrid:
                self.score = self.score + self.tile_matrix[row][col].number
                self.tile_matrix[row][col]=None
 
+         #self.FallTilesInAir()
+      else:
+         pass
+
    def CheckHorizontal(self):
       n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
       rows_will_cleared = []
@@ -146,7 +151,9 @@ class GameGrid:
             rows_will_cleared.append(row)
       return rows_will_cleared
 
-
+   def FallTilesInAir(self):
+      self.ClearHorizontal()
+      pass
 
    def MergeTiles(self):
       n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
@@ -164,6 +171,7 @@ class GameGrid:
                      self.tile_matrix[row+1][col] = None
                      row = 0
                      col = 0
+                     self.score = self.score + current_tile.number
                      continue
             col = col + 1
          row = row + 1
@@ -216,3 +224,31 @@ class GameGrid:
          row = row + 1
          col = 0
    def ShowNextTetromino(self):
+      current_dir = os.path.dirname(os.path.realpath(__file__))
+      img_file = current_dir + F"/images/{self.next_tetromino.type}.png"
+      # center coordinates to display the image
+      img_center_x, img_center_y = (self.grid_width - 1) / 0.75, self.grid_height - 7
+      # image is represented using the Picture class
+      image_to_display = Picture(img_file)
+      stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+   def ShowScore(self):
+      stddraw.setFontSize(30)
+      stddraw.boldText(self.grid_width * 1.1, self.grid_height / 1.1, f"  Score:   {self.score}")
+
+   def PauseGame(self):
+      stddraw.clearKeysTyped()
+      #print("Game is paused")
+     # stddraw.show(100)
+      while True:
+         stddraw.setFontSize(60)
+         stddraw.boldText(self.grid_width / 2, self.grid_height / 2, "Game Paused")
+         if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
+            key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
+
+            if key_typed == "space":
+               stddraw.show(100)
+               print("Game is running")
+               break
+         stddraw.clearKeysTyped()
+         stddraw.show(100)

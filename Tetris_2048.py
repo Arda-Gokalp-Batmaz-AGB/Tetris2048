@@ -5,7 +5,7 @@ import os  # the os module is used for file and directory operations
 from game_grid import GameGrid # the class for modeling the game grid
 from tetromino import Tetromino # the class for modeling the tetrominoes
 import random # used for creating tetrominoes with random types/shapes
-import lib.stddraw as stddraw
+import time
 # MAIN FUNCTION OF THE PROGRAM
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
@@ -38,7 +38,9 @@ def start():
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    #display_game_menu(grid_h, grid_w)
-
+   speed  = 5.6 # must be smaller than 6
+   movetimer = 6 - speed # Negative speed
+   startingtime = time.time()
    # the main game loop (keyboard interaction for moving the tetromino) 
    while True:
       # check user interactions via the keyboard
@@ -58,14 +60,19 @@ def start():
             # (soft drop: causes the tetromino to fall down faster)
             current_tetromino.move(key_typed, grid)
          elif key_typed == "up":
-            # move the active tetromino down by one
-            # (soft drop: causes the tetromino to fall down faster)
             current_tetromino.move(key_typed, grid)
+         elif key_typed == "space":
+            #current_tetromino.PauseGame()
+            grid.PauseGame()
          # clear the queue of the pressed keys for a smoother interaction
          stddraw.clearKeysTyped()
 
       # move the active tetromino down by one at each iteration (auto fall)
-      success = current_tetromino.move("down", grid)
+      if time.time() - startingtime > movetimer:
+         success = current_tetromino.move("down", grid)
+         startingtime = time.time()
+      else:
+         success = True # success = current_tetromino.move("down", grid)
 
       # place the active tetromino on the grid when it cannot go down anymore
       if not success:

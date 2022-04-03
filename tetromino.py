@@ -4,7 +4,8 @@ import copy as cp  # the copy module is used for copying tiles and positions
 import random  # module for generating random values/permutations
 import numpy as np  # the fundamental Python module for scientific computing
 from copy import copy, deepcopy
-import time
+#import lib.stddraw as stddraw
+#import time
 # Class used for modeling tetrominoes with 3 out of 7 different types/shapes 
 # as (I, O and Z)
 class Tetromino:
@@ -324,3 +325,20 @@ class Tetromino:
 
       return True
 
+
+    def PauseGame(self):
+       stddraw.clearKeysTyped()
+       print("Game is paused")
+       stddraw.show(100)
+       while True:
+          stddraw.setFontSize(60)
+          stddraw.boldText(self.grid_width / 2, self.grid_height / 2, "Game Paused")
+          if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
+             key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
+   
+             if key_typed == "space":
+                stddraw.show(100)
+                print("Game is running")
+                break
+          stddraw.clearKeysTyped()
+          stddraw.show(100)
