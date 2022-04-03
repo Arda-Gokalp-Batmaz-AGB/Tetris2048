@@ -3,7 +3,9 @@ from lib.color import Color # used for coloring the game grid
 from point import Point  # used for tile positions
 import numpy as np  # fundamental Python module for scientific computing
 import os
+from tetromino import Tetromino
 from lib.picture import Picture
+import copy
 # Class used for modelling the game grid
 class GameGrid:
 	# Constructor for creating the game grid based on the given arguments
@@ -34,6 +36,7 @@ class GameGrid:
       stddraw.clear(self.empty_cell_color)
       # draw the game grid
       self.draw_grid()
+      self.ShowFallLocation()
       # draw the current/active tetromino if it is not None (the case when the 
       # game grid is updated)
       if self.current_tetromino is not None:
@@ -42,6 +45,7 @@ class GameGrid:
       self.draw_boundaries()
       # show the resulting drawing with a pause duration = 250 ms
       self.ShowNextTetromino()
+      #self.ShowFallLocation()
       self.ShowScore()
       stddraw.show(250)
          
@@ -224,13 +228,29 @@ class GameGrid:
          row = row + 1
          col = 0
    def ShowNextTetromino(self):
-      current_dir = os.path.dirname(os.path.realpath(__file__))
-      img_file = current_dir + F"/images/{self.next_tetromino.type}.png"
-      # center coordinates to display the image
-      img_center_x, img_center_y = (self.grid_width - 1) / 0.75, self.grid_height - 7
-      # image is represented using the Picture class
-      image_to_display = Picture(img_file)
-      stddraw.picture(image_to_display, img_center_x, img_center_y)
+      #copy_next_tetromino = Tetromino(self.next_tetromino.type)
+      copy_next_tetromino = copy.deepcopy(self.next_tetromino)
+      copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
+      copy_next_tetromino.bottom_left_cell.y = self.grid_height - 7
+      copy_next_tetromino.draw()
+      copy_next_tetromino=None
+      # current_dir = os.path.dirname(os.path.realpath(__file__))
+      # img_file = current_dir + F"/images/{self.next_tetromino.type}.png"
+      # # center coordinates to display the image
+      # img_center_x, img_center_y = (self.grid_width - 1) / 0.75, self.grid_height - 7
+      # # image is represented using the Picture class
+      # image_to_display = Picture(img_file)
+      # stddraw.picture(image_to_display, img_center_x, img_center_y)
+
+   def ShowFallLocation(self):
+      copy_current_tetromino = copy.deepcopy(self.current_tetromino)
+      copy_current_tetromino.MakeTetrominoTransparent()
+      while copy_current_tetromino.can_be_moved("down",self):
+         copy_current_tetromino.bottom_left_cell.y -= 1
+         print(copy_current_tetromino.bottom_left_cell.y)
+      copy_current_tetromino.draw()
+      copy_current_tetromino=None
+      #print("SHOWING")
 
    def ShowScore(self):
       stddraw.setFontSize(30)
