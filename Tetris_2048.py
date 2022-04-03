@@ -29,10 +29,16 @@ def start():
    # create the first tetromino to enter the game grid 
    # by using the create_tetromino function defined below
    current_tetromino = create_tetromino(grid_h, grid_w)
-   next_tetromino = create_tetromino(grid_h, grid_w)
-   print(f"Next: {next_tetromino.type}")
+   #next_tetromino = create_tetromino(grid_h, grid_w)
+   NEXT_TETROMINO_COUNT = 5
+   #next_tetrominos = [create_tetromino(grid_h, grid_w),create_tetromino(grid_h, grid_w),create_tetromino(grid_h, grid_w)]
+   next_tetrominos = []
+   for i in range(0,NEXT_TETROMINO_COUNT):
+      next_tetrominos.append(create_tetromino(grid_h, grid_w))
+   #print(f"Next: {next_tetromino.type}")
    grid.current_tetromino = current_tetromino
-   grid.next_tetromino = next_tetromino#
+   #grid.next_tetromino = next_tetromino#
+   grid.next_tetrominos = next_tetrominos  #
    #grid.ShowNextTetromino()
 
    # display a simple menu before opening the game
@@ -86,11 +92,14 @@ def start():
             break
          # create the next tetromino to enter the game grid
          # by using the create_tetromino function defined below
-         current_tetromino = next_tetromino #         current_tetromino = create_tetromino(grid_h, grid_w)
+         #current_tetromino = next_tetromino #         current_tetromino = create_tetromino(grid_h, grid_w)
+         current_tetromino = next_tetrominos.pop(0)
          grid.current_tetromino = current_tetromino
-         next_tetromino = create_tetromino(grid_h, grid_w)#
-         print(f"Next: {next_tetromino.type}")
-         grid.next_tetromino = next_tetromino
+         #next_tetromino = create_tetromino(grid_h, grid_w)#
+         next_tetrominos.append(create_tetromino(grid_h, grid_w))
+         #print(f"Next: {next_tetromino.type}")
+         #grid.next_tetromino = next_tetromino
+         grid.next_tetrominos = next_tetrominos
          # grid.MergeTiles()
          # grid.CheckIsolateds()
          # grid.ClearHorizontal()

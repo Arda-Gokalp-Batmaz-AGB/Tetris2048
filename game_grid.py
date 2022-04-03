@@ -17,7 +17,8 @@ class GameGrid:
       self.tile_matrix = np.full((grid_h, grid_w), None)
       # create the tetromino that is currently being moved on the game grid
       self.current_tetromino = None
-      self.next_tetromino = None#
+      #self.next_tetromino = None#
+      self.next_tetrominos = []
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
@@ -228,19 +229,19 @@ class GameGrid:
          row = row + 1
          col = 0
    def ShowNextTetromino(self):
-      #copy_next_tetromino = Tetromino(self.next_tetromino.type)
-      copy_next_tetromino = copy.deepcopy(self.next_tetromino)
-      copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
-      copy_next_tetromino.bottom_left_cell.y = self.grid_height - 7
-      copy_next_tetromino.draw()
-      copy_next_tetromino=None
-      # current_dir = os.path.dirname(os.path.realpath(__file__))
-      # img_file = current_dir + F"/images/{self.next_tetromino.type}.png"
-      # # center coordinates to display the image
-      # img_center_x, img_center_y = (self.grid_width - 1) / 0.75, self.grid_height - 7
-      # # image is represented using the Picture class
-      # image_to_display = Picture(img_file)
-      # stddraw.picture(image_to_display, img_center_x, img_center_y)
+      currentheight = self.grid_height - 4
+      for i in range(0,len(self.next_tetrominos)):
+         copy_next_tetromino = copy.deepcopy(self.next_tetrominos[i])
+         copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
+         currentheight = currentheight - 3
+         copy_next_tetromino.bottom_left_cell.y = currentheight
+         copy_next_tetromino.draw()
+         copy_next_tetromino = None
+      # copy_next_tetromino = copy.deepcopy(self.next_tetromino)
+      # copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
+      # copy_next_tetromino.bottom_left_cell.y = self.grid_height - 7
+      # copy_next_tetromino.draw()
+      # copy_next_tetromino=None
 
    def ShowFallLocation(self):
       copy_current_tetromino = copy.deepcopy(self.current_tetromino)
