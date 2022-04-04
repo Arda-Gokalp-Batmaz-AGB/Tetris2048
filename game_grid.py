@@ -7,6 +7,7 @@ from tetromino import Tetromino
 from lib.picture import Picture
 import copy
 import time
+from SoundCaller import SoundCaller
 # Class used for modelling the game grid
 class GameGrid:
 	# Constructor for creating the game grid based on the given arguments
@@ -85,7 +86,7 @@ class GameGrid:
       pos_x, pos_y = -0.5, -0.5
       stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
       stddraw.rectangle(9.4,-0.3, self.grid_width / 2 - 0.9, self.grid_height-0.2)
-      stddraw.rectangle(9.8, 17.4, self.grid_width / 2 - 1.7, self.grid_height / 11)#      stddraw.rectangle(9.4, 17.5, self.grid_width / 2 - 0.9, self.grid_height / 9)
+      #stddraw.rectangle(9.8, 17.4, self.grid_width / 2 - 1.7, self.grid_height / 11)#      stddraw.rectangle(9.4, 17.5, self.grid_width / 2 - 0.9, self.grid_height / 9)
       #stddraw.rectangle(9.4, -2, self.grid_width / 2 - 0.9, self.grid_height / 1.3)
       #stddraw.line(9.4,-0.3, self.grid_width / 2, 0.1)
       stddraw.setPenRadius()  # reset the pen radius to its default value
@@ -108,7 +109,14 @@ class GameGrid:
       if col < 0 or col >= self.grid_width:
          return False
       return True
-
+   def is_inside_horizontal(self, col):
+      if col < 0 or col >= self.grid_width:
+         return False
+      return True
+   def is_inside_vertical(self, row):
+      if row < 0 or row >= self.grid_height:
+         return False
+      return True
    # Method that locks the tiles of the landed tetromino on the game grid while
    # checking if the game is over due to having tiles above the topmost grid row.
    # The method returns True when the game is over and False otherwise.
@@ -144,7 +152,7 @@ class GameGrid:
             for col in range(n_cols):
                self.score = self.score + self.tile_matrix[row][col].number
                self.tile_matrix[row][col]=None
-
+               SoundCaller('sounds/clear.wav')
          #self.FallTilesInAir()
       else:
          pass
@@ -240,7 +248,8 @@ class GameGrid:
       currentheight = self.grid_height - 4#2
       stddraw.setFontSize(30)
       stddraw.setPenColor(Color(0, 100, 200))
-      stddraw.boldText(self.grid_width * 1.1, currentheight, f" Next")
+      #stddraw.boldText(self.grid_width * 1.1, currentheight, f" Next")
+      stddraw.picture(Picture(os.path.dirname(os.path.realpath(__file__)) + "/images/nexttext.png"),self.grid_width * 1.14, currentheight-0.2)
       for i in range(0,len(self.next_tetrominos)):
          copy_next_tetromino = copy.deepcopy(self.next_tetrominos[i])
          copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
@@ -272,12 +281,17 @@ class GameGrid:
    def ShowScore(self):
       stddraw.setFontSize(26)
      # stddraw.setPenColor("Red")
-      stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.6, f"Score:")#   {self.score} # stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.8, f"Score:")#   {self.score}
-      stddraw.boldText(self.grid_width * 1.1 + 1.37, self.grid_height / 1.1 + 0.6, f"{self.score}")  # {self.score}
+      #stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.6, f"Score:")#   {self.score} # stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.8, f"Score:")#   {self.score}
+      stddraw.picture(Picture(os.path.dirname(os.path.realpath(__file__)) + "/images/scoretext.png"), self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.6)
+      stddraw.boldText(self.grid_width * 1.1 + 1.6, self.grid_height / 1.1 + 0.6, f"{self.score}")  # {self.score}
+      stddraw.boldText(self.grid_width * 1.1 + 0.9, self.grid_height / 1.1 + 0.6, ":")  # {self.score}
+
    def ShowTime(self):
       stddraw.setFontSize(26)
-      stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.3, f"Time:")#f"  Time:  {int(self.time)}") #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.1, f"Time:")
-      stddraw.boldText(self.grid_width * 1.1 + 1.37, self.grid_height / 1.1 -0.3, f"{int(self.time)}")
+      #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.3, f"Time:")#f"  Time:  {int(self.time)}") #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.1, f"Time:")
+      stddraw.picture(Picture(os.path.dirname(os.path.realpath(__file__)) + "/images/timetext.png"), self.grid_width * 1.1 - 0.35, self.grid_height / 1.1 -0.3)
+      stddraw.boldText(self.grid_width * 1.1 + 1.6, self.grid_height / 1.1 -0.3, f"{int(self.time)}")
+      stddraw.boldText(self.grid_width * 1.1 + 0.9, self.grid_height / 1.1 -0.3, ":")  # {self.score}
    def PauseGame(self):
       stddraw.clearKeysTyped()
       #print("Game is paused")
@@ -305,17 +319,23 @@ class GameGrid:
       # coordinates of the bottom left corner of the start game button
       button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
       # display the start game button as a filled rectangle
-      stddraw.setPenColor(button_color)
-      stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
-      stddraw.filledRectangle(button_blc_x, button_blc_y+4, button_w, button_h)
+      # stddraw.setPenColor(button_color)
+      # stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+      # stddraw.filledRectangle(button_blc_x, button_blc_y+4, button_w, button_h)
       # display the text on the start game button
-      stddraw.setFontFamily("Arial")
-      stddraw.setFontSize(25)
-      stddraw.setPenColor(text_color)
-      text_to_display_1 = "Back to the Menu"
-      text_to_display_2 = "Restart the Game"
-      stddraw.text(img_center_x, button_blc_y+1, text_to_display_1)
-      stddraw.text(img_center_x, button_blc_y+5, text_to_display_2)
+
+      current_dir = os.path.dirname(os.path.realpath(__file__))
+      button_file = current_dir + "/images/button2.png"
+      button_image = Picture(button_file)
+      stddraw.picture(button_image, img_center_x, button_blc_y+1)
+
+      current_dir = os.path.dirname(os.path.realpath(__file__))
+      button_file = current_dir + "/images/button2.png"
+      button_image = Picture(button_file)
+      stddraw.picture(button_image, img_center_x, button_blc_y+5)
+
+      stddraw.picture(Picture(current_dir + "/images/menutext.png"), img_center_x, button_blc_y+1)
+      stddraw.picture(Picture(current_dir + "/images/restarttext.png"), img_center_x, button_blc_y+5)
       # menu interaction loop
       while True:
          # display the menu and wait for a short time (50 ms)

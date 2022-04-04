@@ -6,7 +6,9 @@ from game_grid import GameGrid # the class for modeling the game grid
 from tetromino import Tetromino # the class for modeling the tetrominoes
 import random # used for creating tetrominoes with random types/shapes
 import time
-from SoundCall import Sound
+from SoundCaller import SoundCaller
+from SoundCaller import SoundGlobal
+import RecordSaver
 # MAIN FUNCTION OF THE PROGRAM
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
@@ -21,7 +23,10 @@ def CreateCanvas():
    stddraw.setYscale(-0.5, grid_h - 0.5)
    start(grid_h, grid_w)
    return grid_h,grid_w
+
 def start(grid_h, grid_w, Restart = False, diffspeed = None):
+   highest_score,highest_time = RecordSaver.ReadRecords()
+
    # set the dimensions of the game grid
    # grid_h, grid_w = 20, 14#20, 12
    # # set the size of the drawing canvas
@@ -32,7 +37,7 @@ def start(grid_h, grid_w, Restart = False, diffspeed = None):
    # stddraw.setYscale(-0.5, grid_h - 0.5)
    #grid_h, grid_w = CreateCanvas()
    if(Restart == False):
-      display_game_menu(grid_h, grid_w)
+      display_game_menu(grid_h, grid_w,highest_score,highest_time)
    stddraw.clearKeysTyped()
      # must be smaller than 6
    old_grid_w = grid_w
@@ -70,6 +75,11 @@ def start(grid_h, grid_w, Restart = False, diffspeed = None):
    PlayTime = time.time()
    # the main game loop (keyboard interaction for moving the tetromino) 
    while True:
+      global background_sound_time
+      if (time.time()-background_sound_time >= 205):
+         SoundCaller('sounds/theme1.wav')
+         background_sound_time = time.time()
+         print("Background sound restarted")
       # check user interactions via the keyboard
       if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
          key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
@@ -95,6 +105,8 @@ def start(grid_h, grid_w, Restart = False, diffspeed = None):
             StopMenu(grid,grid_h,old_grid_w,speed)
          elif key_typed == "x":
             grid.DropCurrentTetromino()
+         elif key_typed == "m":
+            SoundGlobal.allow_sound = not SoundGlobal.allow_sound
          # clear the queue of the pressed keys for a smoother interaction
          stddraw.clearKeysTyped()
 
@@ -130,19 +142,25 @@ def start(grid_h, grid_w, Restart = False, diffspeed = None):
          # grid.CheckIsolateds()
          # grid.ClearHorizontal()
          print(grid.score)
+         #playsound('sounds/bp.mp3')
+         SoundCaller('sounds/bp.mp3')
+
       # display the game grid and the current tetromino
       grid.MergeTiles()
       grid.CheckIsolateds()
       grid.ClearHorizontal()
       grid.CalculateTime(PlayTime)
       grid.display()
-
    # print a message on the console when the game is over
-   print("Game over")
-   stddraw.setFontSize(60)
-   stddraw.boldText(old_grid_w / 2, grid_h / 2, "GAME OVER")
+   UpdateRecords(grid,highest_score,highest_time,grid_h,old_grid_w)
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   stddraw.picture(Picture(current_dir + "/images/gameovertext.png"), old_grid_w / 2, grid_h / 2)
+   SoundCaller('sounds/gameover.wav')
+   # print("Game over")
+   # stddraw.setFontSize(60)
+   # stddraw.boldText(old_grid_w / 2, grid_h / 2, "GAME OVER")
    stddraw.show(100)
-   time.sleep(2)
+   time.sleep(5)
    start(grid_h,old_grid_w)#
 
 # Function for creating random shaped tetrominoes to enter the game grid
@@ -156,7 +174,7 @@ def create_tetromino(grid_height, grid_width):
    return tetromino
 
 # Function for displaying a simple menu before starting the game
-def display_game_menu(grid_height, grid_width):
+def display_game_menu(grid_h, grid_w,highest_score,highest_time):
    # colors used for the menu
    background_color =  Color(154,146,145)#Color(42, 69, 99)
    button_color = Color(25, 255, 228)
@@ -168,24 +186,34 @@ def display_game_menu(grid_height, grid_width):
    # path of the image file
    img_file = current_dir + "/images/menu_image.png"
    # center coordinates to display the image
-   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 8
+   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 8
    # image is represented using the Picture class
    image_to_display = Picture(img_file)
    # display the image
    stddraw.picture(image_to_display, img_center_x, img_center_y)
    # dimensions of the start game button
-   button_w, button_h = grid_width - 1.5, 2
-   # coordinates of the bottom left corner of the start game button 
+   button_w, button_h = grid_w - 6, 2
+   # coordinates of the bottom left corner of the start game button
    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
    # display the start game button as a filled rectangle
-   stddraw.setPenColor(button_color)
-   stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+   # stddraw.setPenColor(button_color)
+   # stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
    # display the text on the start game button
-   stddraw.setFontFamily("Arial")
-   stddraw.setFontSize(25)
-   stddraw.setPenColor(text_color)
-   text_to_display = "Click Here to Start the Game"
-   stddraw.text(img_center_x, 5, text_to_display)
+
+   button_file = current_dir + "/images/button.png"
+   button_image = Picture(button_file)
+   stddraw.picture(button_image, img_center_x, img_center_y-5)# img_center_x, img_center_y-7
+
+   text_file = current_dir + "/images/starttext.png"
+   text_image = Picture(text_file)
+   stddraw.picture(text_image, img_center_x, img_center_y-5)
+
+   stddraw.picture(Picture(current_dir + "/images/bestscoretext.png"), img_center_x-1, img_center_y - 7.5)
+   stddraw.setFontSize(26)
+   stddraw.setPenColor(Color(0, 100, 200))
+   stddraw.boldText(img_center_x+2, img_center_y - 7.5, f"{highest_score}")  # {self.score}
+   stddraw.picture(Picture(current_dir + "/images/besttimetext.png"), img_center_x-1, img_center_y - 8.5)
+   stddraw.boldText(img_center_x+2, img_center_y - 8.5, f"{highest_time:.0f}")  # {self.score}
    # menu interaction loop
    while True:
       # display the menu and wait for a short time (50 ms)
@@ -197,7 +225,7 @@ def display_game_menu(grid_height, grid_width):
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
          # check if these coordinates are inside the button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h: 
+            if mouse_y >= img_center_y-6 and mouse_y <= img_center_y-6 + button_h:
                break # break the loop to end the method and start the game
 
 def ChooseDifficulity(grid_h,grid_w,backcolor):
@@ -207,24 +235,27 @@ def ChooseDifficulity(grid_h,grid_w,backcolor):
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
    img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 7
-   button_w, button_h = grid_w - 1.5, 2
+   button_w, button_h = grid_w - 6, 2
    # coordinates of the bottom left corner of the start game button
    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
    # display the start game button as a filled rectangle
-   stddraw.setPenColor(button_color)
-   stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
-   stddraw.filledRectangle(button_blc_x, button_blc_y + 4, button_w, button_h)
-   stddraw.filledRectangle(button_blc_x, button_blc_y + 8, button_w, button_h)
+   # stddraw.setPenColor(button_color)
+   # stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+   # stddraw.filledRectangle(button_blc_x, button_blc_y + 4, button_w, button_h)
+   # stddraw.filledRectangle(button_blc_x, button_blc_y + 8, button_w, button_h)
+
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   button_file = current_dir + "/images/button.png"
+   button_image = Picture(button_file)
+
+   stddraw.picture(button_image, img_center_x, img_center_y)
+   stddraw.picture(button_image, img_center_x, img_center_y-4)
+   stddraw.picture(button_image, img_center_x, img_center_y-8)
+
    # display the text on the start game button
-   stddraw.setFontFamily("Arial")
-   stddraw.setFontSize(25)
-   stddraw.setPenColor(text_color)
-   text_to_display_1 = "Easy"
-   text_to_display_2 = "Normal"
-   text_to_display_3 = "Hard"
-   stddraw.text(img_center_x, button_blc_y + 1, text_to_display_1)
-   stddraw.text(img_center_x, button_blc_y + 5, text_to_display_2)
-   stddraw.text(img_center_x, button_blc_y + 9, text_to_display_3)
+   stddraw.picture(Picture(current_dir + "/images/hardtext.png"), img_center_x, img_center_y)
+   stddraw.picture(Picture(current_dir + "/images/mediumtext.png"), img_center_x, img_center_y-4)
+   stddraw.picture(Picture(current_dir + "/images/easytext.png"), img_center_x, img_center_y-8)
    # menu interaction loop
    while True:
       # display the menu and wait for a short time (50 ms)
@@ -258,8 +289,22 @@ def StopMenu(grid,grid_h,grid_w,diffspeed):
    elif(response == "cont"): # Continue to the game
       stddraw.clearKeysTyped()
       return
-def DisplaySettings():
-   pass
+
+def UpdateRecords(grid,highest_score,highest_time,grid_h,grid_w):
+   current_dir = os.path.dirname(os.path.realpath(__file__))
+   if(grid.score > highest_score):
+      print("New highest score!")
+      highest_score = grid.score
+      stddraw.picture(Picture(current_dir + "/images/newhighestscoretext.png"), grid_w / 2, (grid_h / 2)-2)
+   if(grid.time > highest_time):
+      print("New highest time!")
+      highest_time = grid.time
+      stddraw.picture(Picture(current_dir + "/images/newhighesttimetext.png"), grid_w / 2, (grid_h / 2)-4)
+   RecordSaver.SaveRecords(highest_score,highest_time)
+
 if __name__== '__main__':
    #start()
+   SoundGlobal.allow_sound = True
+   background_sound_time = time.time()
+   SoundCaller('sounds/theme1.wav')
    CreateCanvas()
