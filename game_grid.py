@@ -245,12 +245,16 @@ class GameGrid:
       # copy_next_tetromino.draw()
       # copy_next_tetromino=None
 
+   def DropCurrentTetromino(self):
+      while self.current_tetromino.can_be_moved("down",self):
+         self.current_tetromino.bottom_left_cell.y -= 1
+
    def ShowFallLocation(self):
       copy_current_tetromino = copy.deepcopy(self.current_tetromino)
       copy_current_tetromino.MakeTetrominoTransparent()
       while copy_current_tetromino.can_be_moved("down",self):
          copy_current_tetromino.bottom_left_cell.y -= 1
-         print(copy_current_tetromino.bottom_left_cell.y)
+         #print(copy_current_tetromino.bottom_left_cell.y)
       copy_current_tetromino.draw()
       copy_current_tetromino=None
       #print("SHOWING")
@@ -271,7 +275,15 @@ class GameGrid:
 
             if key_typed == "space":
                stddraw.show(100)
-               print("Game is running")
+               #print("Game is running")
                break
          stddraw.clearKeysTyped()
          stddraw.show(100)
+
+   def MenuHasBeenOpened(self):
+      return True
+   def ShowMenu(self):
+      pass
+
+   def RestartGame(self):
+      pass

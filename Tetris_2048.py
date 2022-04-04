@@ -6,19 +6,33 @@ from game_grid import GameGrid # the class for modeling the game grid
 from tetromino import Tetromino # the class for modeling the tetrominoes
 import random # used for creating tetrominoes with random types/shapes
 import time
+from SoundCall import Sound
 # MAIN FUNCTION OF THE PROGRAM
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
-def start():
-   # set the dimensions of the game grid
+
+def CreateCanvas():
    grid_h, grid_w = 20, 14#20, 12
    # set the size of the drawing canvas
    canvas_h, canvas_w = 40 * grid_h, 40 * grid_w#40
-   stddraw.setCanvasSize(canvas_w, canvas_h) 
+   stddraw.setCanvasSize(canvas_w, canvas_h)
    # set the scale of the coordinate system
    stddraw.setXscale(-0.5, grid_w - 0.5)
    stddraw.setYscale(-0.5, grid_h - 0.5)
+   start(grid_h, grid_w)
+   return grid_h,grid_w
+def start(grid_h, grid_w):
+   # set the dimensions of the game grid
+   # grid_h, grid_w = 20, 14#20, 12
+   # # set the size of the drawing canvas
+   # canvas_h, canvas_w = 40 * grid_h, 40 * grid_w#40
+   # stddraw.setCanvasSize(canvas_w, canvas_h)
+   # # set the scale of the coordinate system
+   # stddraw.setXscale(-0.5, grid_w - 0.5)
+   # stddraw.setYscale(-0.5, grid_h - 0.5)
+   #grid_h, grid_w = CreateCanvas()
    display_game_menu(grid_h, grid_w)
+   old_grid_w = grid_w
    grid_w = 10
    # set the dimension values stored and used in the Tetromino class
    Tetromino.grid_height = grid_h
@@ -68,8 +82,9 @@ def start():
          elif key_typed == "up":
             current_tetromino.move(key_typed, grid)
          elif key_typed == "space":
-            #current_tetromino.PauseGame()
             grid.PauseGame()
+         elif key_typed == "x":
+            grid.DropCurrentTetromino()
          # clear the queue of the pressed keys for a smoother interaction
          stddraw.clearKeysTyped()
 
@@ -100,6 +115,7 @@ def start():
          #print(f"Next: {next_tetromino.type}")
          #grid.next_tetromino = next_tetromino
          grid.next_tetrominos = next_tetrominos
+         #Sound("sounds/BlockPlace.mp3").CallSound()
          # grid.MergeTiles()
          # grid.CheckIsolateds()
          # grid.ClearHorizontal()
@@ -112,6 +128,11 @@ def start():
 
    # print a message on the console when the game is over
    print("Game over")
+   stddraw.setFontSize(60)
+   stddraw.boldText(old_grid_w / 2, grid_h / 2, "GAME OVER")
+   stddraw.show(100)
+   time.sleep(2)
+   start(grid_h,old_grid_w)#
 
 # Function for creating random shaped tetrominoes to enter the game grid
 def create_tetromino(grid_height, grid_width):
@@ -168,7 +189,8 @@ def display_game_menu(grid_height, grid_width):
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h: 
                break # break the loop to end the method and start the game
 
-# start() function is specified as the entry point (main function) from which 
-# the program starts execution
+def DisplaySettings():
+   pass
 if __name__== '__main__':
-   start()
+   #start()
+   CreateCanvas()

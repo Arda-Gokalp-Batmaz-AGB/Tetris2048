@@ -44,6 +44,7 @@ class Tile:
       index=number_list.index(self.number)
       color_list = [Color(255, 204, 102),Color(255, 153, 0),Color(255, 128, 0),Color(230, 115, 0),Color(204, 102, 0),Color(102, 51, 0),Color(230, 230, 0),Color(255, 102, 0),Color(255, 140, 102),Color(255, 83, 26),Color(204, 51, 0),Color(102, 26, 0),Color(26, 6, 0)]
       self.background_color = color_list[index]
+
    def __str__(self):
       return str(self.number)
 
