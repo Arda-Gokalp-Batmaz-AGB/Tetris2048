@@ -6,6 +6,7 @@ import os
 from tetromino import Tetromino
 from lib.picture import Picture
 import copy
+import time
 # Class used for modelling the game grid
 class GameGrid:
 	# Constructor for creating the game grid based on the given arguments
@@ -22,15 +23,17 @@ class GameGrid:
       # the game_over flag shows whether the game is over or not
       self.game_over = False
       # set the color used for the empty grid cells
-      self.empty_cell_color = Color(42, 69, 99)
+      self.empty_cell_color = Color(154,146,145)#Color(206,195,181)#rgba(206,195,181,255)#Color(42, 69, 99)
       # set the colors used for the grid lines and the grid boundaries
-      self.line_color = Color(0, 100, 200) 
-      self.boundary_color = Color(0, 100, 200)
+      self.line_color = Color(132,122,113)#Color(188,175,162)#Color(0, 100, 200)
+      self.boundary_color = Color(132,122,113)#rgba(188,175,162,255)#Color(0, 100, 200)
       # thickness values used for the grid lines and the boundaries
-      self.line_thickness = 0.002
-      self.box_thickness = 10 * self.line_thickness
+      self.line_thickness = 0.002#2
+      self.box_thickness = 40 * self.line_thickness
+     # self.mainboundary_color = Color(132,122,113)
 
       self.score = 0
+      self.time = 0
    # Method used for displaying the game grid
    def display(self):
       # clear the background to empty_cell_color
@@ -48,6 +51,7 @@ class GameGrid:
       self.ShowNextTetromino()
       #self.ShowFallLocation()
       self.ShowScore()
+      self.ShowTime()
       stddraw.show(250)
          
    # Method for drawing the cells and the lines of the game grid
@@ -80,6 +84,10 @@ class GameGrid:
       # the coordinates of the bottom left corner of the game grid
       pos_x, pos_y = -0.5, -0.5
       stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
+      stddraw.rectangle(9.4,-0.3, self.grid_width / 2 - 0.9, self.grid_height-0.2)
+      stddraw.rectangle(9.8, 17.4, self.grid_width / 2 - 1.7, self.grid_height / 11)#      stddraw.rectangle(9.4, 17.5, self.grid_width / 2 - 0.9, self.grid_height / 9)
+      #stddraw.rectangle(9.4, -2, self.grid_width / 2 - 0.9, self.grid_height / 1.3)
+      #stddraw.line(9.4,-0.3, self.grid_width / 2, 0.1)
       stddraw.setPenRadius()  # reset the pen radius to its default value
 
    # Method used for checking whether the grid cell with given row and column 
@@ -230,8 +238,9 @@ class GameGrid:
          col = 0
    def ShowNextTetromino(self):
       currentheight = self.grid_height - 4#2
-      stddraw.setFontSize(40)
-      stddraw.boldText(self.grid_width * 1.1, currentheight, f"Next")
+      stddraw.setFontSize(30)
+      stddraw.setPenColor(Color(0, 100, 200))
+      stddraw.boldText(self.grid_width * 1.1, currentheight, f" Next")
       for i in range(0,len(self.next_tetrominos)):
          copy_next_tetromino = copy.deepcopy(self.next_tetrominos[i])
          copy_next_tetromino.bottom_left_cell.x = (self.grid_width - 1) / 0.85
@@ -258,11 +267,17 @@ class GameGrid:
       copy_current_tetromino.draw()
       copy_current_tetromino=None
       #print("SHOWING")
-
+   def CalculateTime(self,startingtime):
+      self.time = time.time() - startingtime
    def ShowScore(self):
-      stddraw.setFontSize(30)
-      stddraw.boldText(self.grid_width * 1.1, self.grid_height / 1.1, f"  Score:   {self.score}")
-
+      stddraw.setFontSize(26)
+     # stddraw.setPenColor("Red")
+      stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.6, f"Score:")#   {self.score} # stddraw.boldText(self.grid_width * 1.1 - 0.1, self.grid_height / 1.1 + 0.8, f"Score:")#   {self.score}
+      stddraw.boldText(self.grid_width * 1.1 + 1.37, self.grid_height / 1.1 + 0.6, f"{self.score}")  # {self.score}
+   def ShowTime(self):
+      stddraw.setFontSize(26)
+      stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.3, f"Time:")#f"  Time:  {int(self.time)}") #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.1, f"Time:")
+      stddraw.boldText(self.grid_width * 1.1 + 1.37, self.grid_height / 1.1 -0.3, f"{int(self.time)}")
    def PauseGame(self):
       stddraw.clearKeysTyped()
       #print("Game is paused")

@@ -84,13 +84,19 @@ class Tetromino:
 
    # Method that returns the position of the cell in the tile matrix specified 
    # by the given row and column indexes
-   def get_cell_position(self, row, col):
+   def get_cell_position(self, row, col,type="default"):
       n = len(self.tile_matrix)  # n = number of rows = number of columns
       position = Point()
       # horizontal position of the cell
       position.x = self.bottom_left_cell.x + col
       # vertical position of the cell
-      position.y = self.bottom_left_cell.y + (n - 1) - row
+      if(type=="rotation"):
+         position.y = self.bottom_left_cell.y
+      else:
+         position.y = self.bottom_left_cell.y + (n - 1) - row
+
+      if(self.bottom_left_cell.y + (n - 1) - row >=20 and type == "rotation"):
+         print("stop")
       #print(position.y)
       return position
 
@@ -291,10 +297,12 @@ class Tetromino:
                   # Swap row-column
                   if(position == "horizontal"):
                      if(newcolumn + 1 == 3):
-                        newcolumn = 1
+                        newcolumn = newcolumn-1
                      else:
                         newcolumn = newcolumn + 1
-                  newrow = -1 * (newrow - 3)
+                        #newrow = -1 * (newrow - 3)
+                  else:
+                     newcolumn = -1 * (newcolumn - 3)
                   rotated_tetromino_matrix[newrow][newcolumn] = current_tile
 
                   # coord = self.get_cell_position(newrow, newcolumn)
@@ -319,17 +327,17 @@ class Tetromino:
    #    return self.tile_matrix
 
    def CheckRotatedTetromino(self,rotated_tetromino_matrix,game_grid):
-      print("tuş basıldı 4")
+#      print("tuş basıldı 4")
       n = len(self.tile_matrix)
       for col in range(0, n):
          for row in range(0, n):
             current_tile = rotated_tetromino_matrix[row][col]
             if current_tile is not None:
-               coord = self.get_cell_position(row, col)
+               coord = self.get_cell_position(row, col,"rotation")
                if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
-                  print(f"{coord.x},{coord.y}")
+#                  print(f"{coord.x},{coord.y}")
                   return False
-         print(f"{coord.x},{coord.y}")
+         #print(f"{coord.x},{coord.y}")
 
       return True
 
@@ -340,8 +348,9 @@ class Tetromino:
          for row in range(0, n):
             current_tile = self.tile_matrix[row][col]
             if current_tile is not None:
-               current_tile.background_color = Color(42, 69, 99)
-               current_tile.foreground_color = Color(255, 117, 26)
+
+               current_tile.background_color = Color(154,146,145)#Color(206,195,181)#Color(42, 69, 99)
+               current_tile.foreground_color = Color(104,45,102)#Color(255, 117, 26)
                current_tile.box_color = Color(255, 117, 26)
 
    # def PauseGame(self):

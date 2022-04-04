@@ -20,7 +20,7 @@ class Tile:
       # set the colors of the tile
       self.background_color = color_types[random_index] # background (tile) color
       self.foreground_color = Color(0, 100, 200) # foreground (number) color
-      self.box_color = Color(0, 100, 200) # box (boundary) color
+      self.box_color = Color(132,122,113)#Color(0, 100, 200) # box (boundary) color
 
    # Method for drawing the tile
    def draw(self, position, length = 1):

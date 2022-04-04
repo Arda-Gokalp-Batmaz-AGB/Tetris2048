@@ -21,7 +21,7 @@ def CreateCanvas():
    stddraw.setYscale(-0.5, grid_h - 0.5)
    start(grid_h, grid_w)
    return grid_h,grid_w
-def start(grid_h, grid_w, Restart = False):
+def start(grid_h, grid_w, Restart = False, diffspeed = None):
    # set the dimensions of the game grid
    # grid_h, grid_w = 20, 14#20, 12
    # # set the size of the drawing canvas
@@ -33,12 +33,14 @@ def start(grid_h, grid_w, Restart = False):
    #grid_h, grid_w = CreateCanvas()
    if(Restart == False):
       display_game_menu(grid_h, grid_w)
+   stddraw.clearKeysTyped()
+     # must be smaller than 6
    old_grid_w = grid_w
    grid_w = 10
    # set the dimension values stored and used in the Tetromino class
    Tetromino.grid_height = grid_h
    Tetromino.grid_width = grid_w
-   
+
    # create the game grid
    grid = GameGrid(grid_h, grid_w)
    # create the first tetromino to enter the game grid 
@@ -59,9 +61,13 @@ def start(grid_h, grid_w, Restart = False):
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    #display_game_menu(grid_h, grid_w)
-   speed  = 6 # must be smaller than 6
+   if(Restart == False):
+      speed = ChooseDifficulity(grid_h, old_grid_w, Color(154,146,145))#Color(42, 69, 99)
+   else:
+      speed = diffspeed
    movetimer = 6 - speed # Negative speed
    startingtime = time.time()
+   PlayTime = time.time()
    # the main game loop (keyboard interaction for moving the tetromino) 
    while True:
       # check user interactions via the keyboard
@@ -86,7 +92,7 @@ def start(grid_h, grid_w, Restart = False):
          elif key_typed == "space":
             grid.PauseGame()
          elif key_typed == "escape":
-            StopMenu(grid,grid_h,old_grid_w)
+            StopMenu(grid,grid_h,old_grid_w,speed)
          elif key_typed == "x":
             grid.DropCurrentTetromino()
          # clear the queue of the pressed keys for a smoother interaction
@@ -128,6 +134,7 @@ def start(grid_h, grid_w, Restart = False):
       grid.MergeTiles()
       grid.CheckIsolateds()
       grid.ClearHorizontal()
+      grid.CalculateTime(PlayTime)
       grid.display()
 
    # print a message on the console when the game is over
@@ -151,7 +158,7 @@ def create_tetromino(grid_height, grid_width):
 # Function for displaying a simple menu before starting the game
 def display_game_menu(grid_height, grid_width):
    # colors used for the menu
-   background_color = Color(42, 69, 99)
+   background_color =  Color(154,146,145)#Color(42, 69, 99)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
    # clear the background canvas to background_color
@@ -161,7 +168,7 @@ def display_game_menu(grid_height, grid_width):
    # path of the image file
    img_file = current_dir + "/images/menu_image.png"
    # center coordinates to display the image
-   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 7
+   img_center_x, img_center_y = (grid_width - 1) / 2, grid_height - 8
    # image is represented using the Picture class
    image_to_display = Picture(img_file)
    # display the image
@@ -193,12 +200,61 @@ def display_game_menu(grid_height, grid_width):
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h: 
                break # break the loop to end the method and start the game
 
-def StopMenu(grid,grid_h,grid_w):
+def ChooseDifficulity(grid_h,grid_w,backcolor):
+   stddraw.clear(backcolor)
+   stddraw.clearKeysTyped()
+   background_color = Color(42, 69, 99)
+   button_color = Color(25, 255, 228)
+   text_color = Color(31, 160, 239)
+   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 7
+   button_w, button_h = grid_w - 1.5, 2
+   # coordinates of the bottom left corner of the start game button
+   button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+   # display the start game button as a filled rectangle
+   stddraw.setPenColor(button_color)
+   stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+   stddraw.filledRectangle(button_blc_x, button_blc_y + 4, button_w, button_h)
+   stddraw.filledRectangle(button_blc_x, button_blc_y + 8, button_w, button_h)
+   # display the text on the start game button
+   stddraw.setFontFamily("Arial")
+   stddraw.setFontSize(25)
+   stddraw.setPenColor(text_color)
+   text_to_display_1 = "Easy"
+   text_to_display_2 = "Normal"
+   text_to_display_3 = "Hard"
+   stddraw.text(img_center_x, button_blc_y + 1, text_to_display_1)
+   stddraw.text(img_center_x, button_blc_y + 5, text_to_display_2)
+   stddraw.text(img_center_x, button_blc_y + 9, text_to_display_3)
+   # menu interaction loop
+   while True:
+      # display the menu and wait for a short time (50 ms)
+      stddraw.show(50)
+      # check if the mouse has been left-clicked on the button
+      if stddraw.mousePressed():
+         # get the x and y coordinates of the location at which the mouse has
+         # most recently been left-clicked
+         mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+         # check if these coordinates are inside the button
+         if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+               print("Easy Mode")
+               return 5.3 #Easy
+         if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + 4 + button_h:
+               print("Normal Mode")
+               return 5.7 # Normal
+         if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+            if mouse_y >= button_blc_y and mouse_y <= button_blc_y + 8 + button_h:
+               print("Hard Mode")
+               return 6 # Hard
+
+   # Three Difficulties Hard,Normal,Easy, 6 , 5.7 , 5.3
+def StopMenu(grid,grid_h,grid_w,diffspeed):
    response = grid.ShowMenu()
    if(response == "Menu"): # GO back main menu
       start(grid_h,grid_w,False)
    elif(response == "Restart"): # Restart the game
-      start(grid_h,grid_w,True)
+      start(grid_h,grid_w,True,diffspeed)
    elif(response == "cont"): # Continue to the game
       stddraw.clearKeysTyped()
       return
