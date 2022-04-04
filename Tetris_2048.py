@@ -21,7 +21,7 @@ def CreateCanvas():
    stddraw.setYscale(-0.5, grid_h - 0.5)
    start(grid_h, grid_w)
    return grid_h,grid_w
-def start(grid_h, grid_w):
+def start(grid_h, grid_w, Restart = False):
    # set the dimensions of the game grid
    # grid_h, grid_w = 20, 14#20, 12
    # # set the size of the drawing canvas
@@ -31,7 +31,8 @@ def start(grid_h, grid_w):
    # stddraw.setXscale(-0.5, grid_w - 0.5)
    # stddraw.setYscale(-0.5, grid_h - 0.5)
    #grid_h, grid_w = CreateCanvas()
-   display_game_menu(grid_h, grid_w)
+   if(Restart == False):
+      display_game_menu(grid_h, grid_w)
    old_grid_w = grid_w
    grid_w = 10
    # set the dimension values stored and used in the Tetromino class
@@ -58,7 +59,7 @@ def start(grid_h, grid_w):
    # display a simple menu before opening the game
    # by using the display_game_menu function defined below
    #display_game_menu(grid_h, grid_w)
-   speed  = 5.6 # must be smaller than 6
+   speed  = 6 # must be smaller than 6
    movetimer = 6 - speed # Negative speed
    startingtime = time.time()
    # the main game loop (keyboard interaction for moving the tetromino) 
@@ -80,9 +81,12 @@ def start(grid_h, grid_w):
             # (soft drop: causes the tetromino to fall down faster)
             current_tetromino.move(key_typed, grid)
          elif key_typed == "up":
+           #print("Tuş basıldı")
             current_tetromino.move(key_typed, grid)
          elif key_typed == "space":
             grid.PauseGame()
+         elif key_typed == "escape":
+            StopMenu(grid,grid_h,old_grid_w)
          elif key_typed == "x":
             grid.DropCurrentTetromino()
          # clear the queue of the pressed keys for a smoother interaction
@@ -189,6 +193,15 @@ def display_game_menu(grid_height, grid_width):
             if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h: 
                break # break the loop to end the method and start the game
 
+def StopMenu(grid,grid_h,grid_w):
+   response = grid.ShowMenu()
+   if(response == "Menu"): # GO back main menu
+      start(grid_h,grid_w,False)
+   elif(response == "Restart"): # Restart the game
+      start(grid_h,grid_w,True)
+   elif(response == "cont"): # Continue to the game
+      stddraw.clearKeysTyped()
+      return
 def DisplaySettings():
    pass
 if __name__== '__main__':

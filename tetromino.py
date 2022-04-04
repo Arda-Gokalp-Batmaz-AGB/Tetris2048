@@ -145,8 +145,9 @@ class Tetromino:
    def move(self, direction, game_grid):
       # check if the tetromino can be moved in the given direction by using the
       # can_be_moved method defined below
-      if not(self.can_be_moved(direction, game_grid)):
-         return False  # the tetromino cannot be moved in the given direction
+      if(direction!="up"):
+       if not(self.can_be_moved(direction, game_grid)):
+          return False  # the tetromino cannot be moved in the given direction
       # move the tetromino by updating the position of the bottom left cell in 
       # the tile matrix 
       if direction == "left":
@@ -156,6 +157,7 @@ class Tetromino:
       elif direction == "down":
          self.bottom_left_cell.y -= 1
       else:
+        #print("tuş basıldı 2")
         self.tile_matrix= self.rotateTetromino(game_grid)
       return True  # successful move in the given direction
    
@@ -242,6 +244,7 @@ class Tetromino:
 
 
    def rotateTetromino(self,game_grid):
+      #print("tuş basıldı 3")
       n = len(self.tile_matrix)
       rotated_tetromino_matrix = np.full((n, n), None)
       pivot_x = 1
@@ -306,6 +309,7 @@ class Tetromino:
 
       #return self.tile_matrix
       #print(rotated_tetromino_matrix.__str__())
+      print("rotated")
       return rotated_tetromino_matrix
 
    # coord = self.get_cell_position(newrow, newcolumn)
@@ -315,6 +319,7 @@ class Tetromino:
    #    return self.tile_matrix
 
    def CheckRotatedTetromino(self,rotated_tetromino_matrix,game_grid):
+      print("tuş basıldı 4")
       n = len(self.tile_matrix)
       for col in range(0, n):
          for row in range(0, n):
@@ -322,7 +327,9 @@ class Tetromino:
             if current_tile is not None:
                coord = self.get_cell_position(row, col)
                if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
+                  print(f"{coord.x},{coord.y}")
                   return False
+         print(f"{coord.x},{coord.y}")
 
       return True
 

@@ -280,10 +280,47 @@ class GameGrid:
          stddraw.clearKeysTyped()
          stddraw.show(100)
 
-   def MenuHasBeenOpened(self):
-      return True
    def ShowMenu(self):
-      pass
-
-   def RestartGame(self):
-      pass
+      stddraw.clearKeysTyped()
+      background_color = Color(42, 69, 99)
+      button_color = Color(25, 255, 228)
+      text_color = Color(31, 160, 239)
+      img_center_x, img_center_y = (self.grid_width - 1) / 2, self.grid_height - 7
+      button_w, button_h = self.grid_width - 1.5, 2
+      # coordinates of the bottom left corner of the start game button
+      button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+      # display the start game button as a filled rectangle
+      stddraw.setPenColor(button_color)
+      stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+      stddraw.filledRectangle(button_blc_x, button_blc_y+4, button_w, button_h)
+      # display the text on the start game button
+      stddraw.setFontFamily("Arial")
+      stddraw.setFontSize(25)
+      stddraw.setPenColor(text_color)
+      text_to_display_1 = "Back to the Menu"
+      text_to_display_2 = "Restart the Game"
+      stddraw.text(img_center_x, button_blc_y+1, text_to_display_1)
+      stddraw.text(img_center_x, button_blc_y+5, text_to_display_2)
+      # menu interaction loop
+      while True:
+         # display the menu and wait for a short time (50 ms)
+         stddraw.show(50)
+         # check if the mouse has been left-clicked on the button
+         if stddraw.mousePressed():
+            # get the x and y coordinates of the location at which the mouse has
+            # most recently been left-clicked
+            mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
+            # check if these coordinates are inside the button
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+               if mouse_y >= button_blc_y and mouse_y <= button_blc_y + button_h:
+                   return "Menu"
+            if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
+               if mouse_y >= button_blc_y and mouse_y <= button_blc_y+4 + button_h:
+                  return "Restart"
+         if stddraw.hasNextKeyTyped():
+            # check if the user has pressed a key
+            key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
+            if key_typed == "escape":
+               stddraw.clearKeysTyped()
+               stddraw.show(100)
+               return "Cont"
