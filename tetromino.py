@@ -319,9 +319,10 @@ class Tetromino:
       if (rotatable==False):
           #vnew_relocated_rotated_tetromino =
           if(relocateable == True):
-             self.ReLocateTetromino(rotated_tetromino_matrix, game_grid)
-             print("Relocated")
-             return rotated_tetromino_matrix
+             tetro_accepted = self.ReLocateTetromino(rotated_tetromino_matrix, game_grid)
+             #print("Relocated")
+             if(tetro_accepted == True):
+               return rotated_tetromino_matrix
           print("Cant rotated")
           return self.tile_matrix
 
@@ -329,7 +330,7 @@ class Tetromino:
       #    return self.tile_matrix
       #return self.tile_matrix
       #print(rotated_tetromino_matrix.__str__())
-      print("rotated")
+     # print("rotated")
       return rotated_tetromino_matrix
 
    # coord = self.get_cell_position(newrow, newcolumn)
@@ -378,10 +379,18 @@ class Tetromino:
       # if(self.bottom_left_cell.x == temp.x or self.bottom_left_cell.y < 0 or self.bottom_left_cell.x < 0):
       #    return False,None
 
+      #self.bottom_left_cell = temp
+      if(temp.x >= game_grid.grid_width or temp.x < 0):
+         return False
+      #return rotated_tetromino_matrix
+      t = self.bottom_left_cell
       self.bottom_left_cell = temp
+      last_control,f = self.CheckRotatedTetromino(rotated_tetromino_matrix,game_grid)
+      if(last_control == False):
+         self.bottom_left_cell = t
+         return False
       print("Normally Can't Rotate!")
-
-      return rotated_tetromino_matrix
+      return True
 
    def MakeTetrominoTransparent(self):
       n = len(self.tile_matrix)

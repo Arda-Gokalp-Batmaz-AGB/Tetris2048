@@ -14,7 +14,7 @@ import RecordSaver
 # Main function where this program starts execution
 
 def CreateCanvas():
-   grid_h, grid_w = 20, 14#20, 12
+   grid_h, grid_w = 19, 14#20, 12
    # set the size of the drawing canvas
    canvas_h, canvas_w = 40 * grid_h, 40 * grid_w#40
    stddraw.setCanvasSize(canvas_w, canvas_h)
@@ -67,6 +67,7 @@ def start(grid_h, grid_w, Restart = False, diffspeed = None):
    # by using the display_game_menu function defined below
    #display_game_menu(grid_h, grid_w)
    if(Restart == False):
+      #HowtoPlayMenu(grid_h, old_grid_w, Color(154,146,145))
       speed = ChooseDifficulity(grid_h, old_grid_w, Color(154,146,145))#Color(42, 69, 99)
    else:
       speed = diffspeed
@@ -186,7 +187,7 @@ def display_game_menu(grid_h, grid_w,highest_score,highest_time):
    # path of the image file
    img_file = current_dir + "/images/menu_image.png"
    # center coordinates to display the image
-   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 8
+   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 5 #grid_h - 8
    # image is represented using the Picture class
    image_to_display = Picture(img_file)
    # display the image
@@ -195,25 +196,32 @@ def display_game_menu(grid_h, grid_w,highest_score,highest_time):
    button_w, button_h = grid_w - 6, 2
    # coordinates of the bottom left corner of the start game button
    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
+   stddraw.picture(Picture(current_dir + "/images/guideline_2.png"), button_w/2+2.5, button_h*1.4)
    # display the start game button as a filled rectangle
    # stddraw.setPenColor(button_color)
    # stddraw.filledRectangle(button_blc_x, button_blc_y, button_w, button_h)
+   #stddraw.filledRectangle(img_center_x, img_center_y-5, button_w, button_h)
    # display the text on the start game button
 
    button_file = current_dir + "/images/button.png"
    button_image = Picture(button_file)
-   stddraw.picture(button_image, img_center_x, img_center_y-5)# img_center_x, img_center_y-7
+   stddraw.picture(button_image, img_center_x, img_center_y-4)# img_center_x, img_center_y-7
 
    text_file = current_dir + "/images/starttext.png"
    text_image = Picture(text_file)
-   stddraw.picture(text_image, img_center_x, img_center_y-5)
+   stddraw.picture(text_image, img_center_x, img_center_y-4)#-5
 
-   stddraw.picture(Picture(current_dir + "/images/bestscoretext.png"), img_center_x-1, img_center_y - 7.5)
+   stddraw.picture(Picture(current_dir + "/images/bestscoretext.png"), img_center_x-1, img_center_y - 6.5)
    stddraw.setFontSize(26)
    stddraw.setPenColor(Color(0, 100, 200))
-   stddraw.boldText(img_center_x+2, img_center_y - 7.5, f"{highest_score}")  # {self.score}
-   stddraw.picture(Picture(current_dir + "/images/besttimetext.png"), img_center_x-1, img_center_y - 8.5)
-   stddraw.boldText(img_center_x+2, img_center_y - 8.5, f"{highest_time:.0f}")  # {self.score}
+   stddraw.boldText(img_center_x+2, img_center_y - 6.5, f"{highest_score}")  # {self.score}x+2
+   stddraw.picture(Picture(current_dir + "/images/besttimetext.png"), img_center_x-1, img_center_y - 7.5)
+   stddraw.boldText(img_center_x+2, img_center_y - 7.5, f"{highest_time:.0f}")  # {self.score}
+
+   stddraw.setPenColor(Color(77,77,77))
+   stddraw.rectangle(0.6, img_center_y - 13.7, button_w*2-4, button_h*2.7)
+   #stddraw.rectangle(0.6, img_center_y - 8.2, button_w*2-4, button_h*6)
+
    # menu interaction loop
    while True:
       # display the menu and wait for a short time (50 ms)
@@ -225,7 +233,7 @@ def display_game_menu(grid_h, grid_w,highest_score,highest_time):
          mouse_x, mouse_y = stddraw.mouseX(), stddraw.mouseY()
          # check if these coordinates are inside the button
          if mouse_x >= button_blc_x and mouse_x <= button_blc_x + button_w:
-            if mouse_y >= img_center_y-6 and mouse_y <= img_center_y-6 + button_h:
+            if mouse_y >= img_center_y-5 and mouse_y <= img_center_y-5 + button_h:
                break # break the loop to end the method and start the game
 
 def ChooseDifficulity(grid_h,grid_w,backcolor):
@@ -234,7 +242,7 @@ def ChooseDifficulity(grid_h,grid_w,backcolor):
    background_color = Color(42, 69, 99)
    button_color = Color(25, 255, 228)
    text_color = Color(31, 160, 239)
-   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 7
+   img_center_x, img_center_y = (grid_w - 1) / 2, grid_h - 6
    button_w, button_h = grid_w - 6, 2
    # coordinates of the bottom left corner of the start game button
    button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
@@ -280,6 +288,8 @@ def ChooseDifficulity(grid_h,grid_w,backcolor):
                return 6 # Hard
 
    # Three Difficulties Hard,Normal,Easy, 6 , 5.7 , 5.3
+
+
 def StopMenu(grid,grid_h,grid_w,diffspeed):
    response = grid.ShowMenu()
    if(response == "Menu"): # GO back main menu

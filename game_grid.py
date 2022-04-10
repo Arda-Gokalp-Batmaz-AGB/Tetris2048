@@ -85,7 +85,7 @@ class GameGrid:
       # the coordinates of the bottom left corner of the game grid
       pos_x, pos_y = -0.5, -0.5
       stddraw.rectangle(pos_x, pos_y, self.grid_width, self.grid_height)
-      stddraw.rectangle(9.4,-0.3, self.grid_width / 2 - 0.9, self.grid_height-0.2)
+      stddraw.rectangle(9.4,-0.5, self.grid_width / 2 - 0.9, self.grid_height)#-0.5,-0.2
       #stddraw.rectangle(9.8, 17.4, self.grid_width / 2 - 1.7, self.grid_height / 11)#      stddraw.rectangle(9.4, 17.5, self.grid_width / 2 - 0.9, self.grid_height / 9)
       #stddraw.rectangle(9.4, -2, self.grid_width / 2 - 0.9, self.grid_height / 1.3)
       #stddraw.line(9.4,-0.3, self.grid_width / 2, 0.1)
@@ -292,13 +292,14 @@ class GameGrid:
       stddraw.picture(Picture(os.path.dirname(os.path.realpath(__file__)) + "/images/timetext.png"), self.grid_width * 1.1 - 0.35, self.grid_height / 1.1 -0.3)
       stddraw.boldText(self.grid_width * 1.1 + 1.6, self.grid_height / 1.1 -0.3, f"{int(self.time)}")
       stddraw.boldText(self.grid_width * 1.1 + 0.9, self.grid_height / 1.1 -0.3, ":")  # {self.score}
+
    def PauseGame(self):
       stddraw.clearKeysTyped()
       #print("Game is paused")
      # stddraw.show(100)
       while True:
-         stddraw.setFontSize(60)
-         stddraw.boldText(self.grid_width / 2, self.grid_height / 2, "Game Paused")
+         stddraw.picture(Picture(os.path.dirname(os.path.realpath(__file__)) + "/images/gamepausedtext.png"),
+                         self.grid_width / 2, self.grid_height / 2)
          if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
             key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
 
@@ -314,7 +315,7 @@ class GameGrid:
       background_color = Color(42, 69, 99)
       button_color = Color(25, 255, 228)
       text_color = Color(31, 160, 239)
-      img_center_x, img_center_y = (self.grid_width - 1) / 2, self.grid_height - 7
+      img_center_x, img_center_y = (self.grid_width - 1) / 2, self.grid_height - 6
       button_w, button_h = self.grid_width - 1.5, 2
       # coordinates of the bottom left corner of the start game button
       button_blc_x, button_blc_y = img_center_x - button_w / 2, 4
