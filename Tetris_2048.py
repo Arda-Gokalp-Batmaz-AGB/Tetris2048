@@ -13,6 +13,7 @@ import RecordSaver
 #-------------------------------------------------------------------------------
 # Main function where this program starts execution
 
+# In the beginning program creates a canvas to use while program continues
 def CreateCanvas():
    grid_h, grid_w = 19, 14#20, 12
    # set the size of the drawing canvas
@@ -24,6 +25,7 @@ def CreateCanvas():
    start(grid_h, grid_w)
    return grid_h,grid_w
 
+# Depending on the usage, starts or restarts the game
 def start(grid_h, grid_w, Restart = False, diffspeed = None):
    highest_score,highest_time = RecordSaver.ReadRecords()
 
@@ -236,6 +238,7 @@ def display_game_menu(grid_h, grid_w,highest_score,highest_time):
             if mouse_y >= img_center_y-5 and mouse_y <= img_center_y-5 + button_h:
                break # break the loop to end the method and start the game
 
+# Creates a menu for choosing a difficulty
 def ChooseDifficulity(grid_h,grid_w,backcolor):
    stddraw.clear(backcolor)
    stddraw.clearKeysTyped()
@@ -289,7 +292,7 @@ def ChooseDifficulity(grid_h,grid_w,backcolor):
 
    # Three Difficulties Hard,Normal,Easy, 6 , 5.7 , 5.3
 
-
+# Depending on the response method calls start method with different arguments
 def StopMenu(grid,grid_h,grid_w,diffspeed):
    response = grid.ShowMenu()
    if(response == "Menu"): # GO back main menu
@@ -300,6 +303,7 @@ def StopMenu(grid,grid_h,grid_w,diffspeed):
       stddraw.clearKeysTyped()
       return
 
+# Updates the records in the game
 def UpdateRecords(grid,highest_score,highest_time,grid_h,grid_w):
    current_dir = os.path.dirname(os.path.realpath(__file__))
    if(grid.score > highest_score):
@@ -312,6 +316,7 @@ def UpdateRecords(grid,highest_score,highest_time,grid_h,grid_w):
       stddraw.picture(Picture(current_dir + "/images/newhighesttimetext.png"), grid_w / 2, (grid_h / 2)-4)
    RecordSaver.SaveRecords(highest_score,highest_time)
 
+# Starts the program
 if __name__== '__main__':
    #start()
    SoundGlobal.allow_sound = True

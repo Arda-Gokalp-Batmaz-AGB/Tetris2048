@@ -2,6 +2,7 @@
 import os
 from os import path
 
+# Saves highest records to a text file
 def SaveRecords(score,time):
     current_dir = os.path.dirname(os.path.realpath(__file__))
     with open(current_dir+"/records/records.txt", 'w') as f:
@@ -9,6 +10,7 @@ def SaveRecords(score,time):
         f.write(str(time))
     print("Records are recorded")
 
+# Reads records from a text file
 def ReadRecords():
 
     current_dir = os.path.dirname(os.path.realpath(__file__))

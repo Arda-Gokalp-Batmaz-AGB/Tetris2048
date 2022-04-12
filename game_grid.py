@@ -53,7 +53,7 @@ class GameGrid:
       #self.ShowFallLocation()
       self.ShowScore()
       self.ShowTime()
-      stddraw.show(250)
+      stddraw.show(250)#250
          
    # Method for drawing the cells and the lines of the game grid
    def draw_grid(self):
@@ -142,6 +142,7 @@ class GameGrid:
       #print(self.tile_matrix.__str__())
       return self.game_over
 
+   # Clears the filled rows if there is a row that all of it's columns are filled
    def ClearHorizontal(self):
       #will_cleared_horizontal = self.CheckHorizontal()
       will_cleared_horizontal_rows = self.CheckHorizontal()
@@ -157,6 +158,7 @@ class GameGrid:
       else:
          pass
 
+   # Checks if there is any row that all of it's columns are filled
    def CheckHorizontal(self):
       n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
       rows_will_cleared = []
@@ -172,10 +174,12 @@ class GameGrid:
             rows_will_cleared.append(row)
       return rows_will_cleared
 
+   # Test method
    def FallTilesInAir(self):
       self.ClearHorizontal()
       pass
 
+   # Merges the up to down connected same numbered tiles
    def MergeTiles(self):
       n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
       row = 0
@@ -198,6 +202,7 @@ class GameGrid:
          row = row + 1
          col = 0
 
+   # Checks if there are some tiles that it doesn't has any neighbour
    def CheckIsolateds(self):
       n_rows, n_cols = len(self.tile_matrix), len(self.tile_matrix[0])
       row = 0
@@ -244,6 +249,8 @@ class GameGrid:
             col = col + 1
          row = row + 1
          col = 0
+
+   # Shows next three tetrominos in the game screen
    def ShowNextTetromino(self):
       currentheight = self.grid_height - 4#2
       stddraw.setFontSize(30)
@@ -263,10 +270,12 @@ class GameGrid:
       # copy_next_tetromino.draw()
       # copy_next_tetromino=None
 
+   # Drops the current tetromino immediately to bottom possible location
    def DropCurrentTetromino(self):
       while self.current_tetromino.can_be_moved("down",self):
          self.current_tetromino.bottom_left_cell.y -= 1
 
+   # Shows the fall location of current tetromino
    def ShowFallLocation(self):
       copy_current_tetromino = copy.deepcopy(self.current_tetromino)
       copy_current_tetromino.MakeTetrominoTransparent()
@@ -276,8 +285,12 @@ class GameGrid:
       copy_current_tetromino.draw()
       copy_current_tetromino=None
       #print("SHOWING")
+
+   # Calculates elapsed time
    def CalculateTime(self,startingtime):
       self.time = time.time() - startingtime
+
+   # Shows the current score in the game
    def ShowScore(self):
       stddraw.setFontSize(26)
      # stddraw.setPenColor("Red")
@@ -286,6 +299,7 @@ class GameGrid:
       stddraw.boldText(self.grid_width * 1.1 + 1.6, self.grid_height / 1.1 + 0.6, f"{self.score}")  # {self.score}
       stddraw.boldText(self.grid_width * 1.1 + 0.9, self.grid_height / 1.1 + 0.6, ":")  # {self.score}
 
+    # Shows the current time in the game
    def ShowTime(self):
       stddraw.setFontSize(26)
       #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.3, f"Time:")#f"  Time:  {int(self.time)}") #stddraw.boldText(self.grid_width * 1.1 - 0.20, self.grid_height / 1.1 -0.1, f"Time:")
@@ -293,6 +307,7 @@ class GameGrid:
       stddraw.boldText(self.grid_width * 1.1 + 1.6, self.grid_height / 1.1 -0.3, f"{int(self.time)}")
       stddraw.boldText(self.grid_width * 1.1 + 0.9, self.grid_height / 1.1 -0.3, ":")  # {self.score}
 
+    # Pauses the game
    def PauseGame(self):
       stddraw.clearKeysTyped()
       #print("Game is paused")
@@ -310,6 +325,7 @@ class GameGrid:
          stddraw.clearKeysTyped()
          stddraw.show(100)
 
+   # Shows the restart and menu buttons
    def ShowMenu(self):
       stddraw.clearKeysTyped()
       background_color = Color(42, 69, 99)

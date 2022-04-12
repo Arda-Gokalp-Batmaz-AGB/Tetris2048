@@ -14,12 +14,13 @@ class SoundCaller:
         if(SoundGlobal().allow_sound == True):
             self.CreateSoundThread()
 
-
+    # Creates a sound thread for calling a sound effect
     def CreateSoundThread(self):
         path = self.path
         sound_thread = threading.Thread(target=self.SoundThread,args=(path, ))
         sound_thread.start()
 
+    # Calls the specified sound
     def SoundThread(self,path):
         self.duration=playsound(f'{path}',False)
         if(self.duration==0):

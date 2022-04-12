@@ -252,9 +252,9 @@ class Tetromino:
 
       return True  # tetromino can be moved in the given direction
 
-
+   # A method that is used for rotating every tetromino in clock-wise direction by 90 degree
    def rotateTetromino(self,game_grid):
-      #print("tuş basıldı 3")
+      #print("tus basildi 3")
       n = len(self.tile_matrix)
       rotated_tetromino_matrix = np.full((n, n), None)
       pivot_x = 1
@@ -339,6 +339,7 @@ class Tetromino:
    #    print("Its out of bound so rotation cancelled")
    #    return self.tile_matrix
 
+   # Checks if the tetromino that is rotated by rotate method is in a valid position or not
    def CheckRotatedTetromino(self,rotated_tetromino_matrix,game_grid):
       n = len(self.tile_matrix)
       for col in range(0, n):
@@ -358,6 +359,7 @@ class Tetromino:
 
       return True,None
 
+   # If rotating operation is near of the wall, pushes the tetromino and rotates later
    def ReLocateTetromino(self,rotated_tetromino_matrix,game_grid):
       n = len(self.tile_matrix)
       temp = Point()
@@ -389,9 +391,10 @@ class Tetromino:
       if(last_control == False):
          self.bottom_left_cell = t
          return False
-      print("Normally Can't Rotate!")
+      print("Now it's rotatable")
       return True
 
+   # Makes the tetromino transparent to show possible fall location
    def MakeTetrominoTransparent(self):
       n = len(self.tile_matrix)
       for col in range(0, n):
@@ -403,137 +406,3 @@ class Tetromino:
                current_tile.foreground_color = Color(104,45,102)#Color(255, 117, 26)
                current_tile.box_color = Color(255, 117, 26)
 
-   # def PauseGame(self):
-   #    stddraw.clearKeysTyped()
-   #    #print("Game is paused")
-   #   # stddraw.show(100)
-   #    while True:
-   #       stddraw.setFontSize(60)
-   #       stddraw.boldText(self.grid_width / 2, self.grid_height / 2, "Game Paused")
-   #       if stddraw.hasNextKeyTyped():  # check if the user has pressed a key
-   #          key_typed = stddraw.nextKeyTyped()  # the most recently pressed key
-   #
-   #          if key_typed == "space":
-   #             stddraw.show(100)
-   #             print("Game is running")
-   #             break
-   #       stddraw.clearKeysTyped()
-   #       stddraw.show(100)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   #
-   # def ReLocateTetromino(self,rotated_tetromino_matrix,game_grid):
-   #    n = len(self.tile_matrix)
-   #    new_relocated_tetromino_matrix = np.full((n, n), None)
-   #    col = 0
-   #    row = 0
-   #    relocate = False
-   #    while col < n:
-   #       while row < n:
-   #          current_tile = rotated_tetromino_matrix[row][col]
-   #          if current_tile is not None:
-   #             coord = self.get_cell_position(row, col,"rotation")
-   #             print(f"x:{coord.x},y:{coord.y}")
-   #             # if(coord.x == game_grid.grid_width):#game_grid.grid_width <= coord.x and
-   #             #    print("Boing")
-   #             #    if(relocate == False):
-   #             #       relocate = True
-   #             #       row = 0
-   #             #       col = 0
-   #             #       continue
-   #             #    else:
-   #             ##new_relocated_tetromino_matrix[row][col-1] = current_tile
-   #             #row = row + 1
-   #             #continue
-   #
-   #             #return False,None
-   #          row = row + 1
-   #       col = col + 1
-   #       row = 0
-   #    temp = Point()
-   #    temp.x = self.bottom_left_cell.x -1
-   #    temp.y = self.bottom_left_cell.y
-   #    self.bottom_left_cell = temp
-   #    return True,self.tile_matrix
-
-      # def CheckRotatedTetromino(self, rotated_tetromino_matrix, game_grid):
-      #    #      print("tuş basıldı 4")
-      #    n = len(self.tile_matrix)
-      #    locatable_count = 0
-      #    tile_count = 0
-      #    for col in range(0, n):
-      #       for row in range(0, n):
-      #          current_tile = rotated_tetromino_matrix[row][col]
-      #          if current_tile is not None:
-      #             tile_count = tile_count + 1
-      #             coord = self.get_cell_position(row, col, "rotation")
-      #             if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
-      #
-      #                if (game_grid.tile_matrix[coord.y][coord.x] != None):
-      #                   return False, False
-      #
-      #                if (game_grid.is_inside_horizontal(coord.x) == False and game_grid.is_inside_vertical(
-      #                        coord.y == True)):
-      #                   locatable_count = locatable_count + 1
-      #                elif (game_grid.is_inside_vertical(coord.y == False)):
-      #                   return False, False
-      #                # return False
-      #
-      #    if (locatable_count == tile_count):
-      #       return False, True
-      #
-      #    return True, None
-
-
-
-
-      # def CheckRotatedTetromino(self, rotated_tetromino_matrix, game_grid):
-      #    #      print("tuş basıldı 4")
-      #    n = len(self.tile_matrix)
-      #    for col in range(0, n):
-      #       for row in range(0, n):
-      #          current_tile = rotated_tetromino_matrix[row][col]
-      #          if current_tile is not None:
-      #             coord = self.get_cell_position(row, col, "rotation")
-      #             if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
-      #                # print(f"{coord.x},{coord.y}")
-      #                return False
-      #       # print(f"{coord.x},{coord.y}")
-      #    return True
-
-
-   #
-   # def CheckRotatedTetromino(self,rotated_tetromino_matrix,game_grid):
-   #    n = len(self.tile_matrix)
-   #    for col in range(0, n):
-   #       for row in range(0, n):
-   #          current_tile = rotated_tetromino_matrix[row][col]
-   #          if current_tile is not None:
-   #             coord = self.get_cell_position(row, col,"rotation")
-   #             if (not game_grid.is_inside(coord.y, coord.x)) or game_grid.tile_matrix[coord.y][coord.x] != None:
-   #
-   #                if(game_grid.is_inside_horizontal(coord.x) == False and game_grid.is_inside_vertical(coord.y == True)):
-   #                   return False, True
-   #                elif(game_grid.is_inside_vertical(coord.y == False)):
-   #                   return False,False
-   #
-   #                if(game_grid.tile_matrix[coord.y][coord.x] != None):
-   #                   return False,False
-   #
-   #    return True,None
